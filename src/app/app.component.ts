@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild, ElementRef, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { IMqttMessage, MqttService } from 'ngx-mqtt';
+import { Message } from './interfaces/message';
 
 @Component({
   selector: 'app-root',
@@ -28,13 +29,16 @@ export class AppComponent implements OnInit, OnDestroy {
     this.subscription = this._mqttService.observe(this.topicname).subscribe((message: IMqttMessage) => {
       console.log(message);
       this.logMsg('Message: ' + message.payload.toString() + '<br> for topic: ' + message.topic);
+      const m: Message = JSON.parse(message.payload.toString());
+      console.log(m);
     });
     this.logMsg('subscribed to topic: ' + this.topicname);
   }
 
   sendmsg(): void {
     // use unsafe publish for non-ssl websockets
-    this._mqttService.unsafePublish(this.topicname, this.msg, { qos: 1, retain: true });
+    const m: Message = { error: false, msg: this.msg };
+    this._mqttService.unsafePublish(this.topicname, JSON.stringify(m), { qos: 1, retain: true });
     this.msg = '';
   }
 
