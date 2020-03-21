@@ -10,7 +10,7 @@ import { Message } from './interfaces/message';
 })
 export class AppComponent implements OnInit, OnDestroy {
   private subscription: Subscription;
-  topicname: any;
+  topicname: any = 'topic/test';
   msg: any;
   isConnected: boolean = false;
   @ViewChild('msglog', { static: true }) msglog: ElementRef;
@@ -25,14 +25,12 @@ export class AppComponent implements OnInit, OnDestroy {
 
 
   subscribeNewTopic(): void {
-    console.log('inside subscribe new topic');
     this.subscription = this._mqttService.observe(this.topicname).subscribe((message: IMqttMessage) => {
-      console.log(message);
-      this.logMsg('Message: ' + message.payload.toString() + '<br> for topic: ' + message.topic);
+      //console.log(message);
+      this.logMsg('Message: ' + message.payload.toString() + ' for topic: ' + message.topic);
       const m: Message = JSON.parse(message.payload.toString());
       console.log(m);
     });
-    this.logMsg('subscribed to topic: ' + this.topicname);
   }
 
   sendmsg(): void {
@@ -43,7 +41,8 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   logMsg(message): void {
-    this.msglog.nativeElement.innerHTML += '<br><hr>' + message;
+    //this.msglog.nativeElement.innerHTML += '<br><hr>' + message;
+    this.msglog.nativeElement.innerHTML = message;
   }
 
   clear(): void {
