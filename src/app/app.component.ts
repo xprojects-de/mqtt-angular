@@ -12,7 +12,9 @@ export class AppComponent implements OnInit, OnDestroy {
   private subscription: Subscription;
   topicname: any = 'topic/test';
   msg: any;
-  isConnected: boolean = false;
+  isConnected = false;
+  rCounter = 0;
+  lCounter = 0;
   @ViewChild('msglog', { static: true }) msglog: ElementRef;
 
   constructor(private _mqttService: MqttService) { }
@@ -26,10 +28,13 @@ export class AppComponent implements OnInit, OnDestroy {
 
   subscribeNewTopic(): void {
     this.subscription = this._mqttService.observe(this.topicname).subscribe((message: IMqttMessage) => {
-      //console.log(message);
       this.logMsg('Message: ' + message.payload.toString() + ' for topic: ' + message.topic);
       const m: Message = JSON.parse(message.payload.toString());
-      console.log(m);
+      if (this.rCounter % 500 === 0) {
+        console.log(m);
+        this.rCounter = 0;
+      }
+      this.rCounter++;
     });
   }
 
@@ -41,8 +46,12 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   logMsg(message): void {
-    //this.msglog.nativeElement.innerHTML += '<br><hr>' + message;
-    this.msglog.nativeElement.innerHTML = message;
+    if (this.lCounter % 25 === 0) {
+      //this.msglog.nativeElement.innerHTML += '<br><hr>' + message;
+      this.msglog.nativeElement.innerHTML = message;
+      this.lCounter = 0;
+    }
+    this.lCounter++;
   }
 
   clear(): void {
