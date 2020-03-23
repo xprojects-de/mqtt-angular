@@ -6,6 +6,8 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { MqttModule, IMqttServiceOptions } from 'ngx-mqtt';
 
+const useSSL = false;
+
 export const MQTT_SERVICE_OPTIONS: IMqttServiceOptions = {
   hostname: 'localhost',
   port: 8000,
@@ -14,16 +16,19 @@ export const MQTT_SERVICE_OPTIONS: IMqttServiceOptions = {
   username: 'admin-user',
   password: 'admin-password'
 }
-/*export const MQTT_SERVICE_OPTIONS_TLS: IMqttServiceOptions = {
+
+/**
+ * Just working if the Browser accept the self-signed server.cert!
+ */
+export const MQTT_SERVICE_OPTIONS_TLS: IMqttServiceOptions = {
   hostname: 'localhost',
   port: 8001,
   path: '/mqtt',
   protocol: 'wss',
-  ca: CA,
-  cert: CERT,
-  key: KEY,
+  username: 'admin-user',
+  password: 'admin-password',
   rejectUnauthorized: false
-}*/
+}
 
 @NgModule({
   declarations: [
@@ -33,7 +38,7 @@ export const MQTT_SERVICE_OPTIONS: IMqttServiceOptions = {
     BrowserModule,
     FormsModule,
     AppRoutingModule,
-    MqttModule.forRoot(MQTT_SERVICE_OPTIONS)
+    MqttModule.forRoot((useSSL ? MQTT_SERVICE_OPTIONS_TLS : MQTT_SERVICE_OPTIONS))
   ],
   providers: [],
   bootstrap: [AppComponent]
