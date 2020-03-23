@@ -6,15 +6,13 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { MqttModule, IMqttServiceOptions } from 'ngx-mqtt';
 
-//const KEY = './Users/xprojects/Documents/Github/mqtt-java/MQTT-Java/hivemq/certs/mqtt-client-key.pem';
-//const CERT = './Users/xprojects/Documents/Github/mqtt-java/MQTT-Java/hivemq/certs/mqtt-client-cert.pem';
-//const CA = './Users/xprojects/Documents/Github/mqtt-java/MQTT-Java/hivemq/certs/server.pem';
-
 export const MQTT_SERVICE_OPTIONS: IMqttServiceOptions = {
   hostname: 'localhost',
   port: 8000,
   protocol: 'ws',
-  path: '/mqtt'
+  path: '/mqtt',
+  username: 'admin-user',
+  password: 'admin-password'
 }
 /*export const MQTT_SERVICE_OPTIONS_TLS: IMqttServiceOptions = {
   hostname: 'localhost',
